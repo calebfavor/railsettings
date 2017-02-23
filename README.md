@@ -1,2 +1,2 @@
 # railsettings
-Settings package using railmap
+Laravel settings system using entities.
