@@ -116,4 +116,161 @@ class SettingServiceTest extends NotificationsTestCase
 
         $this->assertEquals(null, $responseSetting);
     }
+
+    public function test_get_all_for_owner_category()
+    {
+        $ownerType = 'owner type';
+        $ownerId = rand();
+        $category = 'setting category';
+        $settings = [
+            $category => [
+                rand() => $this->faker->randomNumber(),
+                rand() => $this->faker->randomNumber(),
+                rand() => $this->faker->randomNumber(),
+            ]
+        ];
+
+        $setting = new Setting();
+        $setting->randomize();
+        $setting->setOwnerType($ownerType);
+        $setting->setOwnerId($ownerId);
+        $setting->setSettings($settings);
+        $setting->persist();
+
+        // create some other random settings for extra reassurance
+        for ($i = 0; $i < 3; $i++) {
+            $setting = new Setting();
+            $setting->randomize();
+            $setting->setSettings(
+                [
+                    $this->faker->word => [
+                        $this->faker->word => $this->faker->randomNumber(),
+                    ]
+                ]
+            );
+            $setting->persist();
+        }
+
+        $responseSettings = $this->classBeingTested->getAllForOwnerCategory($ownerType, $ownerId, $category);
+
+        $this->assertEquals($settings[$category], $responseSettings);
+    }
+
+    public function test_get_all_for_owner_category_none_exist()
+    {
+        $responseSettings = $this->classBeingTested->getAllForOwnerCategory(
+            $this->faker->word,
+            rand(),
+            $this->faker->word
+        );
+
+        $this->assertEquals([], $responseSettings);
+    }
+
+    public function test_get_all_for_owner()
+    {
+        $ownerType = 'owner type';
+        $ownerId = rand();
+        $settings = [
+            $this->faker->word => [
+                $this->faker->word => $this->faker->randomNumber(),
+                $this->faker->word => $this->faker->randomNumber(),
+                $this->faker->word => $this->faker->randomNumber(),
+            ],
+            $this->faker->word => [
+                $this->faker->word => $this->faker->randomNumber(),
+                $this->faker->word => $this->faker->randomNumber(),
+                $this->faker->word => $this->faker->randomNumber(),
+            ]
+        ];
+
+        $setting = new Setting();
+        $setting->randomize();
+        $setting->setOwnerType($ownerType);
+        $setting->setOwnerId($ownerId);
+        $setting->setSettings($settings);
+        $setting->persist();
+
+        // create some other random settings for extra reassurance
+        for ($i = 0; $i < 3; $i++) {
+            $setting = new Setting();
+            $setting->randomize();
+            $setting->setSettings(
+                [
+                    $this->faker->word => [
+                        $this->faker->word => $this->faker->randomNumber(),
+                    ]
+                ]
+            );
+            $setting->persist();
+        }
+
+        $responseSettings = $this->classBeingTested->getAllForOwner($ownerType, $ownerId);
+
+        $this->assertEquals($settings, $responseSettings);
+    }
+
+    public function test_get_all_for_owner_none_exist()
+    {
+        $responseSettings = $this->classBeingTested->getAllForOwner($this->faker->word, rand());
+
+        $this->assertEquals([], $responseSettings);
+    }
+
+    public function test_get_all_for_owners()
+    {
+        $ownerSettings = [];
+        $ownerType = 'owner type';
+
+        for ($i = 0; $i < 3; $i++) {
+            $ownerId = rand();
+            $settings = [
+                $this->faker->word => [
+                    $this->faker->word => $this->faker->randomNumber(),
+                    $this->faker->word => $this->faker->randomNumber(),
+                    $this->faker->word => $this->faker->randomNumber(),
+                ],
+                $this->faker->word => [
+                    $this->faker->word => $this->faker->randomNumber(),
+                    $this->faker->word => $this->faker->randomNumber(),
+                    $this->faker->word => $this->faker->randomNumber(),
+                ]
+            ];
+
+            $setting = new Setting();
+            $setting->randomize();
+            $setting->setOwnerType($ownerType);
+            $setting->setOwnerId($ownerId);
+            $setting->setSettings($settings);
+            $setting->persist();
+
+            $ownerSettings[$setting->getOwnerId()] = $settings;
+        }
+
+        // create some other random settings for extra reassurance
+        for ($i = 0; $i < 3; $i++) {
+            $setting = new Setting();
+            $setting->randomize();
+            $setting->setSettings(
+                [
+                    $this->faker->word => [
+                        $this->faker->word => $this->faker->randomNumber(),
+                    ]
+                ]
+            );
+            $setting->persist();
+        }
+
+        $responseSettings = $this->classBeingTested->getAllForOwners($ownerType, array_keys($ownerSettings));
+
+        $this->assertEquals($ownerSettings, $responseSettings);
+    }
+
+    public function test_get_all_for_owners_none_exist()
+    {
+        $responseSettings = $this->classBeingTested->getAllForOwners($this->faker->word, [rand()]);
+
+        $this->assertEquals([], $responseSettings);
+    }
+
 }

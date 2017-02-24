@@ -104,8 +104,21 @@ class SettingService
         return [];
     }
 
+    /**
+     * @param $ownerType
+     * @param $ownerIds
+     * @return array
+     */
     public function getAllForOwners($ownerType, $ownerIds)
     {
+        $settings = $this->settingDataMapper->getForOwners($ownerType, $ownerIds);
 
+        $ownerSettings = [];
+
+        foreach ($settings as $setting) {
+            $ownerSettings[$setting->getOwnerId()] = $setting->getSettings();
+        }
+
+        return $ownerSettings;
     }
 }
