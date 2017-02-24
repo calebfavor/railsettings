@@ -1,4 +1,4 @@
-<?php namespace Railroad\Railnotifications;
+<?php namespace Railroad\Railsettings;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 

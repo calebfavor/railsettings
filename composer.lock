@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "854e56e407dc3ac51fa239d4dbad4d07",
-    "content-hash": "4ebdf43fa0a3079a7c34e9c2989e656a",
+    "hash": "8a0a54a4cc2e7594f3d5bbdacfb36f15",
+    "content-hash": "f228a280257da4041ab06e21758f3615",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -699,16 +699,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.4.12",
+            "version": "v5.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "707f32d32dce58232f7a860e0a1d62caf6f9dbfc"
+                "reference": "3eebfaa759156e06144892b00bb95304aa5a71c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/707f32d32dce58232f7a860e0a1d62caf6f9dbfc",
-                "reference": "707f32d32dce58232f7a860e0a1d62caf6f9dbfc",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3eebfaa759156e06144892b00bb95304aa5a71c1",
+                "reference": "3eebfaa759156e06144892b00bb95304aa5a71c1",
                 "shasum": ""
             },
             "require": {
@@ -824,7 +824,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-02-15 14:31:32"
+            "time": "2017-02-22 16:07:04"
         },
         {
             "name": "league/flysystem",
@@ -1235,12 +1235,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/calebfavor/railmap.git",
-                "reference": "40dbfbec740472aebd057ab060ad3b6c56d5119f"
+                "reference": "0e55008554a47f1a3302f22abb69a42fb20ded3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/calebfavor/railmap/zipball/40dbfbec740472aebd057ab060ad3b6c56d5119f",
-                "reference": "40dbfbec740472aebd057ab060ad3b6c56d5119f",
+                "url": "https://api.github.com/repos/calebfavor/railmap/zipball/0e55008554a47f1a3302f22abb69a42fb20ded3d",
+                "reference": "0e55008554a47f1a3302f22abb69a42fb20ded3d",
                 "shasum": ""
             },
             "require": {
@@ -1271,7 +1271,7 @@
                 }
             ],
             "description": "Entity System",
-            "time": "2017-02-22 00:26:28"
+            "time": "2017-02-23 00:06:03"
         },
         {
             "name": "ramsey/uuid",
@@ -2290,53 +2290,6 @@
             "time": "2015-06-14 21:17:01"
         },
         {
-            "name": "ezyang/htmlpurifier",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "8e4cacf0a76458d6203f53113c47b49c6edc2dc5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/8e4cacf0a76458d6203f53113c47b49c6edc2dc5",
-                "reference": "8e4cacf0a76458d6203f53113c47b49c6edc2dc5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2"
-            },
-            "require-dev": {
-                "simpletest/simpletest": "^1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "HTMLPurifier": "library/"
-                },
-                "files": [
-                    "library/HTMLPurifier.composer.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Edward Z. Yang",
-                    "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com"
-                }
-            ],
-            "description": "Standards compliant HTML filter written in PHP",
-            "homepage": "http://htmlpurifier.org/",
-            "keywords": [
-                "html"
-            ],
-            "time": "2017-02-04 00:54:51"
-        },
-        {
             "name": "fzaninotto/faker",
             "version": "v1.6.0",
             "source": {
@@ -2428,16 +2381,16 @@
         },
         {
             "name": "orchestra/database",
-            "version": "3.4.x-dev",
+            "version": "v3.4.0-BETA1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/database.git",
-                "reference": "8fe082aeaee485a01fe240d54287856bab6c204d"
+                "reference": "78b0f48e76b65fdd4f27c3f1a39abf9025904b0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/database/zipball/8fe082aeaee485a01fe240d54287856bab6c204d",
-                "reference": "8fe082aeaee485a01fe240d54287856bab6c204d",
+                "url": "https://api.github.com/repos/orchestral/database/zipball/78b0f48e76b65fdd4f27c3f1a39abf9025904b0c",
+                "reference": "78b0f48e76b65fdd4f27c3f1a39abf9025904b0c",
                 "shasum": ""
             },
             "require": {
@@ -2478,7 +2431,7 @@
                 "orchestra-platform",
                 "orchestral"
             ],
-            "time": "2017-01-21 06:08:08"
+            "time": "2017-02-08 02:34:32"
         },
         {
             "name": "orchestra/testbench",
@@ -2952,16 +2905,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.9",
+            "version": "1.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b"
+                "reference": "284fb0679dd25fb5ffb56dad92c72860c0a22f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/3b402f65a4cc90abf6e1104e388b896ce209631b",
-                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/284fb0679dd25fb5ffb56dad92c72860c0a22f1b",
+                "reference": "284fb0679dd25fb5ffb56dad92c72860c0a22f1b",
                 "shasum": ""
             },
             "require": {
@@ -2997,7 +2950,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2016-11-15 14:06:22"
+            "time": "2017-02-23 06:14:45"
         },
         {
             "name": "phpunit/phpunit",

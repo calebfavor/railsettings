@@ -5,9 +5,8 @@ namespace Tests;
 use Carbon\Carbon;
 use Faker\Generator;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Railroad\Railnotifications\NotificationsServiceProvider;
+use Railroad\Railsettings\SettingsServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -52,6 +51,6 @@ class TestCase extends BaseTestCase
             ]
         );
 
-        $app->register(NotificationsServiceProvider::class);
+        $app->register(SettingsServiceProvider::class);
     }
 }

@@ -35,11 +35,31 @@ class SettingDataMapper extends DatabaseDataMapperBase
     }
 
     /**
-     * @return Builder
+     * @param $ownerType
+     * @param $ownerId
+     * @return Setting|null
      */
-    public function gettingQuery()
+    public function getForOwner($ownerType, $ownerId)
     {
-        return parent::gettingQuery();
+        return $this->getWithQuery(
+                function (Builder $query) use ($ownerType, $ownerId) {
+                    return $query->where('owner_type', $ownerType)->where('owner_id', $ownerId);
+                }
+            )[0] ?? null;
+    }
+
+    /**
+     * @param $ownerType
+     * @param array $ownerIds
+     * @return Setting[]
+     */
+    public function getForOwners($ownerType, array $ownerIds)
+    {
+        return $this->getWithQuery(
+            function (Builder $query) use ($ownerType, $ownerIds) {
+                return $query->where('owner_type', $ownerType)->whereIn('owner_id', $ownerIds);
+            }
+        );
     }
 
     /**

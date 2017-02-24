@@ -2,10 +2,8 @@
 
 namespace Tests;
 
-use Carbon\Carbon;
-use Railroad\Railmap\Helpers\RailmapHelpers;
-use Railroad\Railnotifications\Entities\Setting;
-use Railroad\Railnotifications\Services\SettingService;
+use Railroad\Railsettings\Entities\Setting;
+use Railroad\Railsettings\Services\SettingService;
 use Tests\TestCase as NotificationsTestCase;
 
 class SettingServiceTest extends NotificationsTestCase
@@ -22,351 +20,100 @@ class SettingServiceTest extends NotificationsTestCase
         $this->classBeingTested = app(SettingService::class);
     }
 
-    public function test_create()
+    public function test_set()
     {
-        $type = $this->faker->word;
-        $data = [
-            'data-1' => $this->faker->word,
-            'data-2' => $this->faker->word,
-            'data-3' => $this->faker->word
-        ];
-        $recipientId = $this->faker->randomNumber();
+        $ownerType = $this->faker->word;
+        $ownerId = $this->faker->randomNumber();
+        $category = 'setting category';
+        $name = 'setting name';
+        $value = $this->faker->randomNumber();
 
-        $responseNotification = $this->classBeingTested->create($type, $data, $recipientId);
+        $settingsArray = [$category => [$name => $value]];
+
+        $this->classBeingTested->set($ownerType, $ownerId, $category, $name, $value);
 
         $this->assertDatabaseHas(
-            'notifications',
+            'settings',
             [
-                'type' => $type,
-                'data' => json_encode($data),
-                'recipient_id' => $recipientId
+                'owner_type' => $ownerType,
+                'owner_id' => $ownerId,
+                'settings' => json_encode($settingsArray),
             ]
         );
     }
 
-    public function test_create_many()
+    public function test_set_update()
     {
-        $rowsData = [];
+        $ownerType = $this->faker->word;
+        $ownerId = $this->faker->randomNumber();
+        $category = 'setting category';
+        $name = 'setting name';
+        $value = $this->faker->randomNumber();
 
-        for ($i = 0; $i < 3; $i++) {
-            $rowsData[] = [
-                'type' => $this->faker->word,
-                'data' => [
-                    'data-1' => $this->faker->word,
-                    'data-2' => $this->faker->word,
-                    'data-3' => $this->faker->word
-                ],
-                'recipient_id' => $this->faker->randomNumber(),
-            ];
-        }
+        $settingsArray = [$category => [$name => $value]];
 
-        $responseNotifications = $this->classBeingTested->createMany($rowsData);
-
-        foreach ($rowsData as $rowData) {
-            $rowData['data'] = json_encode($rowData['data']);
-
-            $this->assertDatabaseHas(
-                'notifications',
-                $rowData
-            );
-        }
-    }
-
-    public function test_destroy()
-    {
-        $type = $this->faker->word;
-        $data = [
-            'data-1' => $this->faker->word,
-            'data-2' => $this->faker->word,
-            'data-3' => $this->faker->word
-        ];
-        $recipientId = $this->faker->randomNumber();
-
-        $responseNotification = $this->classBeingTested->create($type, $data, $recipientId);
+        $this->classBeingTested->set($ownerType, $ownerId, $category, $name, $value);
 
         $this->assertDatabaseHas(
-            'notifications',
+            'settings',
             [
-                'type' => $type,
-                'data' => json_encode($data),
-                'recipient_id' => $recipientId
+                'owner_type' => $ownerType,
+                'owner_id' => $ownerId,
+                'settings' => json_encode($settingsArray),
             ]
         );
 
-        $this->classBeingTested->destroy($responseNotification->getId());
+        $newValue = $this->faker->sentence();
+        $newSettingsArray = [$category => [$name => $newValue]];
 
-        $this->assertDatabaseMissing(
-            'notifications',
+        $this->classBeingTested->set($ownerType, $ownerId, $category, $name, $newValue);
+
+        $this->assertDatabaseHas(
+            'settings',
             [
-                'type' => $type,
-                'data' => json_encode($data),
-                'recipient_id' => $recipientId
+                'owner_type' => $ownerType,
+                'owner_id' => $ownerId,
+                'settings' => json_encode($newSettingsArray),
             ]
         );
     }
 
     public function test_get()
     {
-        $notification = new Setting();
-        $notification->randomize();
-        $notification->persist();
+        $category = 'setting category';
+        $name = 'setting name';
+        $value = $this->faker->randomNumber();
 
-        $responseNotification = $this->classBeingTested->get($notification->getId());
-
-        $this->assertEquals($notification, $responseNotification);
-    }
-
-    public function test_get_empty()
-    {
-        $responseNotification = $this->classBeingTested->get(rand());
-
-        $this->assertEquals(null, $responseNotification);
-    }
-
-    public function test_get_many_paginated_1_page()
-    {
-        $notifications = [];
-        $recipientId = rand();
-
-        for ($i = 0; $i < 3; $i++) {
-            $notification = new Setting();
-            $notification->randomize();
-            $notification->setRecipientId($recipientId);
-            $notification->persist();
-
-            $notifications[] = $notification;
-        }
-
-        $notifications = RailmapHelpers::sortEntitiesByDateAttribute($notifications, 'createdOn', 'desc');
-
-        $responseNotifications = $this->classBeingTested->getManyPaginated($recipientId, 3, 0);
-
-        $this->assertEquals($notifications, $responseNotifications);
-    }
-
-    public function test_get_many_paginated_multi_page()
-    {
-        $notifications = [];
-        $recipientId = rand();
-
-        for ($i = 0; $i < 7; $i++) {
-            $notification = new Setting();
-            $notification->randomize();
-            $notification->setRecipientId($recipientId);
-            $notification->persist();
-
-            $notifications[] = $notification;
-        }
-
-        $notifications = RailmapHelpers::sortEntitiesByDateAttribute($notifications, 'createdOn', 'desc');
-
-        $responseNotifications = $this->classBeingTested->getManyPaginated($recipientId, 3, 0);
-
-        $this->assertEquals(array_slice($notifications, 0, 3), $responseNotifications);
-
-        $responseNotifications = $this->classBeingTested->getManyPaginated($recipientId, 3, 3);
-
-        $this->assertEquals(array_slice($notifications, 3, 3), $responseNotifications);
-
-        $responseNotifications = $this->classBeingTested->getManyPaginated($recipientId, 3, 6);
-
-        $this->assertEquals(array_slice($notifications, 6, 3), $responseNotifications);
-    }
-
-    public function test_get_many_unread()
-    {
-        $notifications = [];
-        $recipientId = rand();
-
-        for ($i = 0; $i < 3; $i++) {
-            $notification = new Setting();
-            $notification->randomize();
-            $notification->setRecipientId($recipientId);
-            $notification->setReadOn(null);
-            $notification->persist();
-
-            $notifications[] = $notification;
-        }
-
-        $notifications = RailmapHelpers::sortEntitiesByDateAttribute($notifications, 'createdOn', 'desc');
-
-        $responseNotifications = $this->classBeingTested->getManyUnread($recipientId);
-
-        $this->assertEquals($notifications, $responseNotifications);
-    }
-
-    public function test_get_many_unread_created_after()
-    {
-        $notifications = [];
-        $recipientId = rand();
-
-        for ($i = 0; $i < 5; $i++) {
-            $notification = new Setting();
-            $notification->randomize();
-            $notification->setRecipientId($recipientId);
-            $notification->setReadOn(null);
-            $notification->persist();
-
-            $notifications[] = $notification;
-        }
-
-        $notifications = RailmapHelpers::sortEntitiesByDateAttribute($notifications, 'createdOn', 'desc');
-
-        $responseNotifications = $this->classBeingTested->getManyUnread(
-            $recipientId,
-            $notifications[2]->getCreatedOn()
-        );
-
-        $this->assertEquals(array_slice($notifications, 0, 3), $responseNotifications);
-    }
-
-    public function test_get_many_paginated_none()
-    {
-        $responseNotification = $this->classBeingTested->getManyPaginated(rand(), 5, 0);
-
-        $this->assertEquals([], $responseNotification);
-    }
-
-    public function test_mark_read()
-    {
-        $notification = new Setting();
-        $notification->randomize();
-        $notification->setReadOn(null);
-        $notification->persist();
-
-        $this->assertDatabaseHas(
-            'notifications',
+        $setting = new Setting();
+        $setting->randomize();
+        $setting->setSettings(
             [
-                'id' => $notification->getId(),
-                'read_on' => null
-            ]
-        );
-
-        $this->classBeingTested->markRead($notification->getId());
-
-        $this->assertDatabaseHas(
-            'notifications',
-            [
-                'id' => $notification->getId(),
-                'read_on' => Carbon::now()->toDateTimeString()
-            ]
-        );
-    }
-
-    public function test_mark_read_specific_time()
-    {
-        $notification = new Setting();
-        $notification->randomize();
-        $notification->setReadOn(null);
-        $notification->persist();
-
-        $this->assertDatabaseHas(
-            'notifications',
-            [
-                'id' => $notification->getId(),
-                'read_on' => null
-            ]
-        );
-
-        $this->classBeingTested->markRead($notification->getId(), Carbon::now()->subMonth());
-
-        $this->assertDatabaseHas(
-            'notifications',
-            [
-                'id' => $notification->getId(),
-                'read_on' => Carbon::now()->subMonth()->toDateTimeString()
-            ]
-        );
-    }
-
-    public function test_mark_read_not_exist()
-    {
-        $this->classBeingTested->markRead(rand());
-    }
-
-    public function test_mark_un_read()
-    {
-        $notification = new Setting();
-        $notification->randomize();
-        $notification->persist();
-
-        $this->assertDatabaseHas(
-            'notifications',
-            [
-                'id' => $notification->getId(),
-                'read_on' => $notification->getReadOn()
-            ]
-        );
-
-        $this->classBeingTested->markUnRead($notification->getId());
-
-        $this->assertDatabaseHas(
-            'notifications',
-            [
-                'id' => $notification->getId(),
-                'read_on' => null
-            ]
-        );
-    }
-
-    public function test_mark_un_read_not_exist()
-    {
-        $this->classBeingTested->markUnRead(rand());
-    }
-
-    public function test_mark_all_un_read()
-    {
-        $recipientId = rand();
-        $notifications = [];
-
-        for ($i = 0; $i < 3; $i++) {
-            $notification = new Setting();
-            $notification->randomize();
-            $notification->setRecipientId($recipientId);
-            $notification->setReadOn(null);
-            $notification->persist();
-
-            $notifications[] = $notification;
-        }
-
-        $this->classBeingTested->markAllRead($recipientId);
-
-        foreach ($notifications as $notification) {
-            $this->assertDatabaseHas(
-                'notifications',
-                [
-                    'id' => $notification->getId(),
-                    'read_on' => Carbon::now()
+                $category => [
+                    $name => $value,
                 ]
-            );
-        }
+            ]
+        );
+        $setting->persist();
+
+        $responseSetting = $this->classBeingTested->get(
+            $setting->getOwnerType(),
+            $setting->getOwnerId(),
+            $category,
+            $name
+        );
+
+        $this->assertEquals($value, $responseSetting);
     }
 
-    public function test_mark_all_un_read_specific_time()
+    public function test_get_does_not_exist()
     {
-        $recipientId = rand();
-        $notifications = [];
+        $responseSetting = $this->classBeingTested->get(
+            $this->faker->word,
+            rand(),
+            $this->faker->word,
+            $this->faker->word
+        );
 
-        for ($i = 0; $i < 3; $i++) {
-            $notification = new Setting();
-            $notification->randomize();
-            $notification->setRecipientId($recipientId);
-            $notification->setReadOn(null);
-            $notification->persist();
-
-            $notifications[] = $notification;
-        }
-
-        $this->classBeingTested->markAllRead($recipientId, Carbon::now()->subMonth());
-
-        foreach ($notifications as $notification) {
-            $this->assertDatabaseHas(
-                'notifications',
-                [
-                    'id' => $notification->getId(),
-                    'read_on' => Carbon::now()->subMonth()
-                ]
-            );
-        }
+        $this->assertEquals(null, $responseSetting);
     }
 }

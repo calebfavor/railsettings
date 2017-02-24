@@ -88,9 +88,16 @@ class Setting extends EntityBase
         $this->setOwnerId($faker->randomNumber());
         $this->setSettings(
             [
-                'data-1' => $faker->word,
-                'data-2' => $faker->word,
-                'data-3' => $faker->word
+                'category-1' => [
+                    'setting-1' => $faker->word,
+                    'setting-2' => $faker->randomNumber(),
+                    'setting-3' => $faker->sentences
+                ],
+                'category-2' => [
+                    'setting-1' => $faker->word,
+                    'setting-2' => $faker->randomNumber(),
+                    'setting-3' => $faker->sentences
+                ]
             ]
         );
 
