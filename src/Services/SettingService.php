@@ -47,9 +47,10 @@ class SettingService
      * @param $ownerId
      * @param $category
      * @param $name
-     * @return string|null
+     * @param null $default
+     * @return null|string
      */
-    public function get($ownerType, $ownerId, $category, $name)
+    public function get($ownerType, $ownerId, $category, $name, $default = null)
     {
         $setting = $this->settingDataMapper->getForOwner($ownerType, $ownerId);
 
@@ -61,7 +62,7 @@ class SettingService
             }
         }
 
-        return null;
+        return $default;
     }
 
     /**
