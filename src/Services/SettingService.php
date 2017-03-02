@@ -67,6 +67,33 @@ class SettingService
 
     /**
      * @param $ownerType
+     * @param $ownerIds
+     * @param $category
+     * @param $name
+     * @param null $default
+     * @return array
+     */
+    public function getForOwnersKeyed($ownerType, $ownerIds, $category, $name, $default = null)
+    {
+        $settings = $this->settingDataMapper->getForOwners($ownerType, $ownerIds);
+
+        $ownerSettings = [];
+
+        foreach ($settings as $setting) {
+            $currentSettings = $setting->getSettings();
+
+            if (isset($currentSettings[$category][$name])) {
+                $ownerSettings[$setting->getOwnerId()] = $currentSettings[$category][$name];
+            } else {
+                $ownerSettings[$setting->getOwnerId()] = $default;
+            }
+        }
+
+        return $ownerSettings;
+    }
+
+    /**
+     * @param $ownerType
      * @param $ownerId
      * @param $category
      * @return array
